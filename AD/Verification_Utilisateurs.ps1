@@ -21,7 +21,7 @@ foreach ($utilisateur in $utilisateurs) {
 }
 
 # Exporter les résultats au format CSV
-$cheminRapport = "C:\Rapports\UtilisateursInactifs.csv"
+$cheminRapport = "UtilisateursInactifs.csv"
 $resultats | Export-Csv -Path $cheminRapport -NoTypeInformation -Encoding UTF8
 
 Write-Output "Le rapport a été généré avec succès : $cheminRapport"
