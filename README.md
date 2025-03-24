@@ -1,11 +1,14 @@
-# PowerShell
+# PowerShell 🚀
 
-## Project Structure
+## Structure du projet 📁
 
 ```
 PowerShell
 ├── AD
-│   └── Verification_DISQUE.ps1
+│   ├── Inventaire des machines.ps1
+│   ├── Nettoyage des objets obsolètes.ps1
+│   ├── Verification_DISQUE.ps1
+│   └── Verification_Utilisateurs.ps1
 ├── .vscode
 │   ├── extensions
 │   ├── launch.json
@@ -15,29 +18,38 @@ PowerShell
 └── README.md
 ```
 
-## Files
+## Fichiers 📄
+
+### AD/Inventaire des machines.ps1
+Script pour générer un rapport d'inventaire des machines dans Active Directory et l'exporter en CSV.
+
+### AD/Nettoyage des objets obsolètes.ps1
+Script pour nettoyer les objets obsolètes dans Active Directory et générer un rapport en CSV.
 
 ### AD/Verification_DISQUE.ps1
 Script pour vérifier l'état et le taux de remplissage des disques sur un Active Directory et générer un rapport en CSV.
 
+### AD/Verification_Utilisateurs.ps1
+Script pour vérifier l'existence d'utilisateurs inactifs et avec un mot de passe antérieur à 1 an dans Active Directory et générer un rapport en CSV.
+
 ### .vscode/extensions
-Contains VSCode extensions configuration.
+Contient la configuration des extensions VSCode.
 
 ### .vscode/launch.json
-Contains VSCode launch configuration.
+Contient la configuration de lancement de VSCode.
 
 ### .vscode/tasks.json
-Contains VSCode tasks configuration.
+Contient la configuration des tâches de VSCode.
 
 ### .vscode/settings.json
-Contains VSCode settings configuration.
+Contient la configuration des paramètres de VSCode.
 
 ### LICENSE
-MIT License for the project.
+Licence MIT pour le projet.
 
 ### README.md
-This file.
+Ce fichier.
 
-## License
+## Licence 📜
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
