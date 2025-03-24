@@ -8,14 +8,16 @@ PowerShell
 │   ├── Inventaire des machines.ps1
 │   ├── Nettoyage des objets obsolètes.ps1
 │   ├── Verification_DISQUE.ps1
-│   └── Verification_Utilisateurs.ps1
+│   ├── Verification_Utilisateurs.ps1
+│   └── gpo.ps1
 ├── .vscode
 │   ├── extensions
 │   ├── launch.json
 │   ├── tasks.json
 │   └── settings.json
 ├── LICENSE
-└── README.md
+├── README.md
+└── UI.ps1
 ```
 
 ## Fichiers 📄
@@ -31,6 +33,12 @@ Script pour vérifier l'état et le taux de remplissage des disques sur un Activ
 
 ### AD/Verification_Utilisateurs.ps1
 Script pour vérifier l'existence d'utilisateurs inactifs et avec un mot de passe antérieur à 1 an dans Active Directory et générer un rapport en CSV.
+
+### AD/gpo.ps1
+Script pour générer des rapports CSV, connecter des lecteurs réseaux et déployer d'autres scripts via GPO.
+
+### UI.ps1
+Script PowerShell pour ouvrir d'autres scripts avec une interface graphique.
 
 ### .vscode/extensions
 Contient la configuration des extensions VSCode.
