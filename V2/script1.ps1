@@ -3,14 +3,13 @@ function Show-Menu {
     Clear-Host
     Write-Host "=== Menu des Scripts ===" -ForegroundColor Cyan
     Write-Host "1. Création d’un utilisateur avec mot de passe temporaire"
-    Write-Host "2. Modification en masse des informations d’utilisateurs"
-    Write-Host "3. Réinitialisation de mot de passe pour plusieurs utilisateurs"
-    Write-Host "4. Création d’un groupe et ajout d’utilisateurs"
-    Write-Host "5. Lister les membres d’un groupe"
-    Write-Host "6. Création automatique de dossiers (simulant des OU)"
-    Write-Host "7. Lister les utilisateurs ayant une description"
-    Write-Host "8. Lister les utilisateurs inactifs depuis plus de 90 jours"
-    Write-Host "9. Lister les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an"
+    Write-Host "2. Réinitialisation de mot de passe pour plusieurs utilisateurs"
+    Write-Host "3. Création des dossiers personnels des utilisateurs de l'AD"
+    Write-Host "4. Création automatique de dossiers (simulant des OU)"
+    Write-Host "5. Lister les utilisateurs ayant une description"
+    Write-Host "6. Lister les utilisateurs inactifs depuis plus de 90 jours"
+    Write-Host "7. Lister les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an"
+    Write-Host "8. Afficher les statistiques sur l'espace disque restant"
     Write-Host "0. Quitter"
 }
 
@@ -48,14 +47,7 @@ function Execute-Script {
             }
         }
         2 { 
-            Write-Host "Exécution du script 2 : Modification en masse des informations d’utilisateurs..." -ForegroundColor Green
-            $users = Import-Csv "C:\Users\UpdateUsers.csv"
-            foreach ($user in $users) {
-                Write-Host "Modification de l’utilisateur : $($user.Name) avec les nouvelles informations."
-            }
-        }
-        3 { 
-            Write-Host "Exécution du script 3 : Réinitialisation de mot de passe..." -ForegroundColor Green
+            Write-Host "Exécution du script 2 : Réinitialisation de mot de passe..." -ForegroundColor Green
 
             # Demande l'identifiant de l'utilisateur
             $username = Read-Host "Entrez l'identifiant de l'utilisateur pour réinitialiser le mot de passe"
@@ -79,30 +71,36 @@ function Execute-Script {
                 Write-Host "Erreur lors de la réinitialisation du mot de passe : $($_.Exception.Message)" -ForegroundColor Red
             }
         }
-        4 { 
-            Write-Host "Exécution du script 4 : Création d’un groupe et ajout d’utilisateurs..." -ForegroundColor Green
-            $groupName = "IT_Security"
-            $users = Get-Content "C:\Users\GroupMembers.txt"
-            Write-Host "Groupe créé : $groupName"
-            foreach ($user in $users) {
-                Write-Host "Ajout de l’utilisateur : $user au groupe $groupName"
+        3 { 
+            Write-Host "Exécution du script 3 : Création des dossiers personnels des utilisateurs de l'AD..." -ForegroundColor Green
+            try {
+                # Récupère tous les utilisateurs de l'AD
+                $users = Get-ADUser -Filter * -Properties SamAccountName
+                $basePath = "C:\Users\HomeFolders" # Chemin de base pour les dossiers personnels
+
+                foreach ($user in $users) {
+                    $userFolder = Join-Path -Path $basePath -ChildPath $user.SamAccountName
+                    if (-Not (Test-Path -Path $userFolder)) {
+                        New-Item -ItemType Directory -Path $userFolder -Force | Out-Null
+                        Write-Host "Dossier personnel créé pour l'utilisateur : $($user.SamAccountName)" -ForegroundColor Green
+                    } else {
+                        Write-Host "Le dossier personnel existe déjà pour l'utilisateur : $($user.SamAccountName)" -ForegroundColor Yellow
+                    }
+                }
+            } catch {
+                Write-Host "Erreur lors de la création des dossiers personnels : $($_.Exception.Message)" -ForegroundColor Red
             }
         }
-        5 { 
-            Write-Host "Exécution du script 5 : Lister les membres d’un groupe..." -ForegroundColor Green
-            $groupName = "IT_Security"
-            Write-Host "Liste des membres du groupe $groupName exportée dans GroupMembers.csv"
-        }
-        6 { 
-            Write-Host "Exécution du script 6 : Création automatique de dossiers..." -ForegroundColor Green
+        4 { 
+            Write-Host "Exécution du script 4 : Création automatique de dossiers..." -ForegroundColor Green
             $folders = @("HR", "IT", "Finance", "Marketing")
             foreach ($folder in $folders) {
                 New-Item -ItemType Directory -Path "C:\Structure\$folder" -Force
                 Write-Host "Dossier créé : $folder"
             }
         }
-        7 { 
-            Write-Host "Exécution du script 7 : Lister les utilisateurs ayant une description..." -ForegroundColor Green
+        5 { 
+            Write-Host "Exécution du script 5 : Lister les utilisateurs ayant une description..." -ForegroundColor Green
             try {
                 # Récupère les utilisateurs ayant une description
                 $usersWithDescription = Get-ADUser -Filter {Description -like "*"} -Properties Description
@@ -117,8 +115,8 @@ function Execute-Script {
                 Write-Host "Erreur lors de la récupération des utilisateurs : $($_.Exception.Message)" -ForegroundColor Red
             }
         }
-        8 { 
-            Write-Host "Exécution du script 8 : Lister les utilisateurs inactifs depuis plus de 90 jours..." -ForegroundColor Green
+        6 { 
+            Write-Host "Exécution du script 6 : Lister les utilisateurs inactifs depuis plus de 90 jours..." -ForegroundColor Green
             try {
                 # Récupère les utilisateurs inactifs depuis plus de 90 jours
                 $inactiveUsers = Get-ADUser -Filter * -Properties LastLogonDate | Where-Object {
@@ -135,8 +133,8 @@ function Execute-Script {
                 Write-Host "Erreur lors de la récupération des utilisateurs inactifs : $($_.Exception.Message)" -ForegroundColor Red
             }
         }
-        9 { 
-            Write-Host "Exécution du script 9 : Lister les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an..." -ForegroundColor Green
+        7 { 
+            Write-Host "Exécution du script 7 : Lister les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an..." -ForegroundColor Green
             try {
                 # Récupère les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an
                 $usersWithOldPasswords = Get-ADUser -Filter * -Properties PasswordLastSet | Where-Object {
@@ -153,6 +151,19 @@ function Execute-Script {
                 Write-Host "Erreur lors de la récupération des utilisateurs : $($_.Exception.Message)" -ForegroundColor Red
             }
         }
+        8 { 
+            Write-Host "Exécution du script 8 : Afficher les statistiques sur l'espace disque restant..." -ForegroundColor Green
+            try {
+                # Récupère les informations sur les disques
+                $drives = Get-PSDrive -PSProvider FileSystem
+                foreach ($drive in $drives) {
+                    $freeSpacePercent = [math]::Round(($drive.Free / $drive.Used) * 100, 2)
+                    Write-Host "Disque $($drive.Name) : $freeSpacePercent% d'espace libre"
+                }
+            } catch {
+                Write-Host "Erreur lors de la récupération des statistiques sur l'espace disque : $($_.Exception.Message)" -ForegroundColor Red
+            }
+        }
         0 { 
             Write-Host "Quitter le menu. Au revoir !" -ForegroundColor Yellow
             exit
@@ -166,7 +177,7 @@ function Execute-Script {
 # Boucle principale du menu
 do {
     Show-Menu
-    $choice = Read-Host "Entrez votre choix (0-9)"
+    $choice = Read-Host "Entrez votre choix (0-8)"
     Execute-Script -choice $choice
     Pause
 } while ($choice -ne 0)
