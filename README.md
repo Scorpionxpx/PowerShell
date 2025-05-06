@@ -1,6 +1,4 @@
-Voici le `README.md` complet et corrigé avec l’arborescence bien formatée :
 
-````markdown
 # 💻 PowerShell – Menu interactif d'administration Active Directory
 
 Ce dépôt contient un ensemble de scripts PowerShell pour automatiser des tâches d'administration dans un environnement Active Directory. Il inclut un **menu interactif** permettant d'exécuter différentes fonctions d’audit, de gestion des utilisateurs et de maintenance système.
