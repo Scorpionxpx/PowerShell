@@ -121,7 +121,9 @@ function Execute-Script {
             Write-Host "Exécution du script 8 : Lister les utilisateurs inactifs depuis plus de 90 jours..." -ForegroundColor Green
             try {
                 # Récupère les utilisateurs inactifs depuis plus de 90 jours
-                $inactiveUsers = Get-ADUser -Filter {LastLogonDate -lt (Get-Date).AddDays(-90)} -Properties LastLogonDate
+                $inactiveUsers = Get-ADUser -Filter * -Properties LastLogonDate | Where-Object {
+                    $_.LastLogonDate -and ($_.LastLogonDate -lt (Get-Date).AddDays(-90))
+                }
                 if ($inactiveUsers) {
                     foreach ($user in $inactiveUsers) {
                         Write-Host "Utilisateur : $($user.SamAccountName), Dernière connexion : $($user.LastLogonDate)"
@@ -137,9 +139,11 @@ function Execute-Script {
             Write-Host "Exécution du script 9 : Lister les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an..." -ForegroundColor Green
             try {
                 # Récupère les utilisateurs n'ayant pas changé leur mot de passe depuis plus d'un an
-                $users = Get-ADUser -Filter {PasswordLastSet -lt (Get-Date).AddYears(-1)} -Properties PasswordLastSet
-                if ($users) {
-                    foreach ($user in $users) {
+                $usersWithOldPasswords = Get-ADUser -Filter * -Properties PasswordLastSet | Where-Object {
+                    $_.PasswordLastSet -and ($_.PasswordLastSet -lt (Get-Date).AddYears(-1))
+                }
+                if ($usersWithOldPasswords) {
+                    foreach ($user in $usersWithOldPasswords) {
                         Write-Host "Utilisateur : $($user.SamAccountName), Dernier changement de mot de passe : $($user.PasswordLastSet)"
                     }
                 } else {
