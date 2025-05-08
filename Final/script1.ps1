@@ -3,7 +3,7 @@ function Show-Menu {
     Clear-Host
     Write-Host "=== Menu des Scripts ===" -ForegroundColor Cyan
     Write-Host "1. Création d’un utilisateur avec mot de passe temporaire"
-    Write-Host "2. Réinitialisation de mot de passe pour plusieurs utilisateurs"
+    Write-Host "2. Réinitialisation de mot de passe pour un utilisateur"
     Write-Host "3. Création des dossiers personnels des utilisateurs de l'AD"
     Write-Host "4. Création automatique de dossiers (simulant des OU)"
     Write-Host "5. Lister les utilisateurs ayant une description"
