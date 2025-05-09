@@ -76,7 +76,7 @@ function Execute-Script {
             try {
                 # Récupère tous les utilisateurs de l'AD
                 $users = Get-ADUser -Filter * -Properties SamAccountName
-                $basePath = "C:\Users\HomeFolders" # Chemin de base pour les dossiers personnels
+                $basePath = "C:\HomeFolders" # Chemin de base pour les dossiers personnels
 
                 foreach ($user in $users) {
                     $userFolder = Join-Path -Path $basePath -ChildPath $user.SamAccountName
